@@ -3,18 +3,21 @@ import requests # Importa o módulo para realizar requisições HTTP
 import argparse # Importa o módulo para análise de argumentos de linha de comando
 
 # Função para baixar o arquivo .gitignore
-def baixar_gitignore(linguagem):
-    """Baixa o arquivo .gitignore da linguagem especificada."""
+def baixar_gitignore(tecnologias):
+    """Baixa o arquivo .gitignore com base nas tecnologias especificadas."""
 
-    # Definir a URL base do repositório no GitHub onde os .gitignore estão armazenados
-    url_base = 'https://raw.githubusercontent.com/github/gitignore/main'
+    # URL base do serviço Toptal para .gitignore
+    url_base = 'https://www.toptal.com/developers/gitignore/api'
 
-    # Construir a URL completa do arquivo .gitignore para a linguagem especificada
-    url_gitignore = f'{url_base}/{linguagem.capitalize()}.gitignore' # Capitaliza a primeira letra da linguagem
+    # Concatena as tecnologias separadas por vírgula
+    tecnologias_formatadas = ','.join(tecnologias)
+
+    # Constrói a URL completa para a requisição
+    url_gitignore = f'{url_base}/{tecnologias_formatadas}'
 
     try:
         # Informa o usuário que o download do .gitignore está sendo iniciado
-        print(f'Baixando .gitignore para a linguagem: {linguagem}...')
+        print(f'Baixando .gitignore para as tecnologias: {", ".join(tecnologias)}...')
 
         # Realiza a requisição HTTP GET para obter o conteúdo do arquivo .gitignore
         resposta = requests.get(url_gitignore)
@@ -43,19 +46,19 @@ def baixar_gitignore(linguagem):
 # Função principal para analisar os argumentos da linha de comando
 def main():
     # Cria o analisador de argumentos (parser)
-    parser = argparse.ArgumentParser(description='Baixar o arquivo .gitignore para uma linguagem específica.')
+    parser = argparse.ArgumentParser(description='Baixar o arquivo .gitignore para tecnologias específicas.')
 
-    # Define o argumento 'linguagem', que especifica o nome da linguagem para o .gitignore
-    parser.add_argument('linguagem', help='Nome da linguagem para o .gitignore (ex: Python, Node, etc.)')
+    # Define o argumento 'tecnologias', permitindo múltiplos valores
+    parser.add_argument('tecnologias', nargs='+', help='Lista de tecnologias para o .gitignore (ex: python node visualstudiocode)')
 
     # Adiciona o argumento de versão
-    parser.add_argument('--version', action='version', version='gitignore 1.0.0', help='Exibe a versão do CLI')
+    parser.add_argument('--version', action='version', version='gitignore 2.0.0', help='Exibe a versão do CLI')
 
     # Faz a análise dos argumentos passados na linha de comando
     args = parser.parse_args()
 
-    # Chama a função para baixar o .gitignore utilizando a linguagem informada
-    baixar_gitignore(args.linguagem)
+    # Chama a função para baixar o .gitignore com as tecnologias informadas
+    baixar_gitignore(args.tecnologias)
 
 # Verifica se o script está sendo executado diretamente
 if __name__ == '__main__':
